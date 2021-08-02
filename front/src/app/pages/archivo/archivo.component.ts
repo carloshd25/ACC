@@ -8,7 +8,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 export class ArchivoComponent implements OnInit {
 
-  private isCsv='^[*]+[.]+[cC]+[sS]+[vV]';
+  private isCsv='(.)*[.]+[cC]+[sS]+[vV]';
 
   processFileForm: FormGroup=this.fb.group({ });
   
@@ -26,6 +26,12 @@ export class ArchivoComponent implements OnInit {
     }else{
       console.log('formulario no valido')
     }
+  }
+
+  isValidFiel(field:string):string{
+    const validateField=this.processFileForm.get(field);
+    return (!validateField?.valid && validateField?.touched) 
+    ? 'is-invalid' : validateField?.touched ? 'is-valid':'';
   }
 
   private initForm():void{
