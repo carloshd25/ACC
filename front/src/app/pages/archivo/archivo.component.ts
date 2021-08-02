@@ -2,10 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import * as AWS from 'aws-sdk';
+import * as fs from 'file-system';
 
-
-
-//import * as uuid from 'uuid';
 
 @Component({
   selector: 'app-archivo',
@@ -22,15 +20,29 @@ export class ArchivoComponent implements OnInit {
   private AWSID_='AKIAQMM5EU3QUWPLMGT2';
   private AWSSECRET_='nzwz1cgIjw4eAMD2X4MTw4kxp/4qzs7VJLTJQc5B';
   private BUCKET_='acc-pt';
-  private FILE_='C:\\fakepath\\pruebaTecnica.csv';
-  private NAME_FILE='pruebaTecnica.csv';
+  
+  private NAME_FILE='pruebaTecnica2.csv';
   private RUTAOUT_='archivosIN/';
 
-  private fileContent='';
+  
   constructor(private fb:FormBuilder) { }
 
   upload(){
     
+
+    var dir=this.processFileForm.controls.archivo.value;
+    fs.readdir(dir, function (err:any, files:any) {
+      //handling error
+      if (err) {
+          return console.log('Unable to scan directory: ' + err);
+      } 
+      //listing all files using forEach
+      files.forEach(function (file:any) {
+          // Do whatever you want to do with the file
+          console.log(file); 
+      });
+    });
+    var content='this.processFileForm.controls.archivo.value';
     
 
     
@@ -44,29 +56,41 @@ export class ArchivoComponent implements OnInit {
     Key: this.RUTAOUT_ + this.NAME_FILE,
     ACL: 'public-read',
     ContentType: 'text/csv',
-    Body: this.fileContent
+    Body: content
     };
     
-    let etag =  s3.upload(params);
+    let etag =  s3.upload(params ,function (err:any, data:any) {
+      if (err) {
+          console.log('There was an error uploading your file: ', err);
+          return false;
+      }
+      console.log('Successfully uploaded file.', data);
+      return true;
+    });
     return etag;
   };
 
-fileEvent(fileinput:any){
-  console.log('entro');
-  console.log(fileinput);
-  this.fileContent=fileinput.targat.files[0];
-  console.log(this.fileContent);
-}
   ngOnInit(): void {
     this.initForm();
   }
 
- 
+  onFileSelected(event:any){
+    const file:File = event.target.files[0];
+
+        if (file) {
+
+            this.NAME_FILE = file.name;
+            const formData = new FormData();
+
+        }
+
+  }
 
   onSave():void{
     console.log('entro')
     if(this.processFileForm.valid){
-      console.log(this.processFileForm.value);
+     // console.log(this.processFileForm.value);
+      console.log(this.processFileForm.controls.archivo.value);
       console.log(this.upload());
 
     }else{

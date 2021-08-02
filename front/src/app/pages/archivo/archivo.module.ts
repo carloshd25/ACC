@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { ArchivoRoutingModule } from './archivo-routing.module';
 import { ArchivoComponent } from './archivo.component';
 import { ReactiveFormsModule } from '@angular/forms';
-
+import {HttpClientModule}  from '@angular/common/http';
 
 
 
@@ -16,7 +16,8 @@ import { ReactiveFormsModule } from '@angular/forms';
   imports: [
     CommonModule,
     ArchivoRoutingModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    HttpClientModule
     
   ]
 })
