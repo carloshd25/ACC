@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import * as AWS from 'aws-sdk';
-import * as fs from 'file-system';
+
 
 
 @Component({
@@ -25,24 +25,15 @@ export class ArchivoComponent implements OnInit {
   private RUTAOUT_='archivosIN/';
 
   
+  
   constructor(private fb:FormBuilder) { }
 
   upload(){
     
 
     var dir=this.processFileForm.controls.archivo.value;
-    fs.readdir(dir, function (err:any, files:any) {
-      //handling error
-      if (err) {
-          return console.log('Unable to scan directory: ' + err);
-      } 
-      //listing all files using forEach
-      files.forEach(function (file:any) {
-          // Do whatever you want to do with the file
-          console.log(file); 
-      });
-    });
-    var content='this.processFileForm.controls.archivo.value';
+    
+    var content=dir;
     
 
     
@@ -80,8 +71,7 @@ export class ArchivoComponent implements OnInit {
         if (file) {
 
             this.NAME_FILE = file.name;
-            const formData = new FormData();
-
+            console.log(this.NAME_FILE);
         }
 
   }
@@ -89,8 +79,7 @@ export class ArchivoComponent implements OnInit {
   onSave():void{
     console.log('entro')
     if(this.processFileForm.valid){
-     // console.log(this.processFileForm.value);
-      console.log(this.processFileForm.controls.archivo.value);
+
       console.log(this.upload());
 
     }else{
