@@ -6,6 +6,9 @@ import { ArchivoComponent } from './archivo.component';
 import { ReactiveFormsModule } from '@angular/forms';
 
 
+
+
+
 @NgModule({
   declarations: [
     ArchivoComponent
@@ -14,6 +17,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     CommonModule,
     ArchivoRoutingModule,
     ReactiveFormsModule
+    
   ]
 })
 export class ArchivoModule { }
