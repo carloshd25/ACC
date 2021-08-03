@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import * as AWS from 'aws-sdk';
-
+import { HttpClient  } from '@angular/common/http';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 
 @Component({
@@ -23,20 +24,15 @@ export class ArchivoComponent implements OnInit {
   
   private NAME_FILE='pruebaTecnica2.csv';
   private RUTAOUT_='archivosIN/';
+  private BODY_='';
 
   
   
-  constructor(private fb:FormBuilder) { }
+  constructor(private fb:FormBuilder,private http: HttpClient) { }
 
   upload(){
     
-
-    var dir=this.processFileForm.controls.archivo.value;
-    
-    var content=dir;
-    
-
-    
+    var content='hola';
     const s3 = new AWS.S3({
     apiVersion: '2006-03-01',
     accessKeyId: this.AWSID_,
@@ -47,7 +43,7 @@ export class ArchivoComponent implements OnInit {
     Key: this.RUTAOUT_ + this.NAME_FILE,
     ACL: 'public-read',
     ContentType: 'text/csv',
-    Body: content
+    Body:  this.BODY_
     };
     
     let etag =  s3.upload(params ,function (err:any, data:any) {
@@ -74,10 +70,24 @@ export class ArchivoComponent implements OnInit {
             console.log(this.NAME_FILE);
         }
 
+
+        
+        let reader = new FileReader();
+        reader.onload = (e:any) => {
+          // Cuando el archivo se terminó de cargar
+          let lines = e.target.result;
+          //let output = reverseMatrix(lines);
+          console.log(lines);
+          this.BODY_=lines;
+        };
+          // Leemos el contenido del archivo seleccionado
+          reader.readAsBinaryString(file);
+
+
   }
 
   onSave():void{
-    console.log('entro')
+    
     if(this.processFileForm.valid){
 
       console.log(this.upload());
