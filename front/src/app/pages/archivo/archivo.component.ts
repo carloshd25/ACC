@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import * as AWS from 'aws-sdk';
 import { HttpClient  } from '@angular/common/http';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+import { RestService } from '../../services/rest.service';
 
 
 @Component({
@@ -11,6 +11,7 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
   templateUrl: './archivo.component.html',
   styleUrls: ['./archivo.component.scss']
 })
+
 export class ArchivoComponent implements OnInit {
 
   private isCsv='(.)*[.]+[cC]+[sS]+[vV]';
@@ -22,17 +23,18 @@ export class ArchivoComponent implements OnInit {
   private AWSSECRET_='nzwz1cgIjw4eAMD2X4MTw4kxp/4qzs7VJLTJQc5B';
   private BUCKET_='acc-pt';
   
-  private NAME_FILE='pruebaTecnica2.csv';
+  private NAME_FILE='';
+  private EMAIL='';
   private RUTAOUT_='archivosIN/';
   private BODY_='';
 
+  private datos={};
   
-  
-  constructor(private fb:FormBuilder,private http: HttpClient) { }
+  constructor(private fb:FormBuilder,private http: HttpClient,private rest: RestService) { }
 
   upload(){
     
-    var content='hola';
+    
     const s3 = new AWS.S3({
     apiVersion: '2006-03-01',
     accessKeyId: this.AWSID_,
@@ -56,6 +58,25 @@ export class ArchivoComponent implements OnInit {
     });
     return etag;
   };
+
+  addAcc():void {
+
+    let ACC = { email: this.EMAIL, nomFile: this.NAME_FILE};
+    
+    this.rest.sendEmail(ACC).subscribe((result:any) => {
+      console.log('consumio');
+      console.log(result);
+      this.datos=result;
+
+      alert(result.message );
+    }, (err:any) => {
+      console.log(err);
+    });
+    
+    console.log('ultimo');
+    console.log(this.datos);
+    
+  }
 
   ngOnInit(): void {
     this.initForm();
@@ -89,9 +110,11 @@ export class ArchivoComponent implements OnInit {
   onSave():void{
     
     if(this.processFileForm.valid){
-
+      this.EMAIL = this.processFileForm.controls.email.value;
       console.log(this.upload());
-
+       this.addAcc();
+      console.log('funciono');
+      
     }else{
       console.log('formulario no valido')
     }
