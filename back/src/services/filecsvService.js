@@ -1,11 +1,12 @@
 const { createHash } = require('crypto');
+const GeneralException = require('../exceptions/ExceptionGeneral');
 
 exports.ProcessFile = async (textFile) => {
     const arrayFilas = textFile.split('\n');
     var cedula, cedulaSHA, filaFin;
     let textFin = 'cedula,cedula_hash,nombre\n';
     cedula = arrayFilas[0].split(',');
-    if(cedula.length == 2 && cedula[0] == 'cedula' && cedula[1] == 'cedula'){
+    if(cedula.length == 2 && cedula[1].includes('nombre') && cedula[0].includes('cedula')){
         for (var i = 1; i < arrayFilas.length; i++) {
             cedula = arrayFilas[i].split(',');
             if(cedula.length == 2){
