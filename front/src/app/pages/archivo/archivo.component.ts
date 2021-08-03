@@ -114,7 +114,7 @@ export class ArchivoComponent implements OnInit {
       console.log(this.upload());
        this.addAcc();
       console.log('funciono');
-      
+      this.initForm();
     }else{
       console.log('formulario no valido')
     }
